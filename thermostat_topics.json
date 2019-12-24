@@ -1,0 +1,536 @@
+[
+    {
+        "id": "74f51eb0.b87828",
+        "type": "tab",
+        "label": "Termosztát üzemmód",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "fa389455.d7b48",
+        "type": "mqtt in",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostatmode",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "a25b1722.008ab8",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "e383f465.2b27f8"
+            ]
+        ]
+    },
+    {
+        "id": "e383f465.2b27f8",
+        "type": "switch",
+        "z": "74f51eb0.b87828",
+        "name": "Mód",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "auto",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "heat",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "4ebe11b3.9b38a8"
+            ],
+            [
+                "cf6a3673.fae0b"
+            ],
+            [
+                "e997a7a8.0244d8"
+            ]
+        ]
+    },
+    {
+        "id": "6158c1e.96e394",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/things/thermostat/properties/deviceOn",
+        "qos": "",
+        "retain": "",
+        "broker": "a25b1722.008ab8",
+        "x": 810,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "e997a7a8.0244d8",
+        "type": "change",
+        "z": "74f51eb0.b87828",
+        "name": "switch off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "false",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 180,
+        "wires": [
+            [
+                "6158c1e.96e394"
+            ]
+        ]
+    },
+    {
+        "id": "e572ff2c.64cd38",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/things/thermostat/properties/schedulesMode",
+        "qos": "",
+        "retain": "",
+        "broker": "a25b1722.008ab8",
+        "x": 830,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "cf6a3673.fae0b",
+        "type": "change",
+        "z": "74f51eb0.b87828",
+        "name": "off",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "off",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 120,
+        "wires": [
+            [
+                "e572ff2c.64cd38"
+            ]
+        ]
+    },
+    {
+        "id": "4ebe11b3.9b38a8",
+        "type": "change",
+        "z": "74f51eb0.b87828",
+        "name": "auto",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "auto",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 60,
+        "wires": [
+            [
+                "c04c5a6a.ccc048"
+            ]
+        ]
+    },
+    {
+        "id": "c04c5a6a.ccc048",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/things/thermostat/properties/schedulesMode",
+        "qos": "",
+        "retain": "",
+        "broker": "a25b1722.008ab8",
+        "x": 830,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "f2c5dd90.875818",
+        "type": "mqtt in",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/things/thermostat/properties",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "a25b1722.008ab8",
+        "x": 200,
+        "y": 280,
+        "wires": [
+            [
+                "fd9b196f.98fdf8"
+            ]
+        ]
+    },
+    {
+        "id": "8cfac9c1.d26898",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "action",
+        "func": "var payload=msg.payload;\nvar mode = \"off\";\nif (typeof payload.state !== 'undefined') {\n    if (payload.deviceOn) {\n        if (payload.state=='heating') {\n            mode = \"heating\";\n        } else {\n            mode = \"idle\";\n        }\n    } \n}\nmsg.payload = mode;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 280,
+        "wires": [
+            [
+                "1db9441.6bfc3bc"
+            ]
+        ]
+    },
+    {
+        "id": "fd9b196f.98fdf8",
+        "type": "switch",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "\"\"",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "934ca8f7.2ca708"
+            ]
+        ]
+    },
+    {
+        "id": "934ca8f7.2ca708",
+        "type": "json",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 600,
+        "y": 280,
+        "wires": [
+            [
+                "8cfac9c1.d26898",
+                "e3944ca4.1f50d8",
+                "56f137db.615b4",
+                "bb267acd.936ba8",
+                "f3998d51.f05b2",
+                "6ded602a.12ddd",
+                "e176aafa.ef404",
+                "e2b657f6.0e2ce8",
+                "f9651062.156258"
+            ]
+        ]
+    },
+    {
+        "id": "1db9441.6bfc3bc",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/action",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1030,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "e3944ca4.1f50d8",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "mode",
+        "func": "var payload=msg.payload;\nvar mode = \"off\";\nif (typeof payload.deviceOn !== 'undefined') {\n    if (payload.deviceOn) {\n        if (payload.schedulesMode=='off') {\n            mode = \"heat\";\n        } else {\n            mode = \"auto\";\n        }\n    } \n}\nmsg.payload = mode;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 340,
+        "wires": [
+            [
+                "453d9b99.4662b4"
+            ]
+        ]
+    },
+    {
+        "id": "453d9b99.4662b4",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/mode",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1030,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "56f137db.615b4",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "temperature",
+        "func": "var payload=msg.payload;\nif (typeof payload.temperature !== 'undefined') {\n    msg.payload = payload.temperature;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 770,
+        "y": 400,
+        "wires": [
+            [
+                "73be9c71.e238f4"
+            ]
+        ]
+    },
+    {
+        "id": "73be9c71.e238f4",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/temperature",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1050,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "bb267acd.936ba8",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "targetTemperature",
+        "func": "var payload=msg.payload;\nif (typeof payload.targetTemperature !== 'undefined') {\n    msg.payload = payload.targetTemperature;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 790,
+        "y": 460,
+        "wires": [
+            [
+                "f1190fdc.6c4ce"
+            ]
+        ]
+    },
+    {
+        "id": "f1190fdc.6c4ce",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/targetTemperature",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1060,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "f3998d51.f05b2",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "ecoMode",
+        "func": "var payload=msg.payload;\nif (typeof payload.ecoMode !== 'undefined') {\n    msg.payload = payload.ecoMode;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 520,
+        "wires": [
+            [
+                "8ab69393.d2d018"
+            ]
+        ]
+    },
+    {
+        "id": "8ab69393.d2d018",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/ecoMode",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1040,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "6ded602a.12ddd",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "locked",
+        "func": "var payload=msg.payload;\nif (typeof payload.locked !== 'undefined') {\n    msg.payload = payload.locked;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 580,
+        "wires": [
+            [
+                "57ac91a1.1d88"
+            ]
+        ]
+    },
+    {
+        "id": "57ac91a1.1d88",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/locked",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1030,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "e176aafa.ef404",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "deviceOn",
+        "func": "var payload=msg.payload;\nif (typeof payload.deviceOn !== 'undefined') {\n    msg.payload = payload.deviceOn;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 760,
+        "y": 640,
+        "wires": [
+            [
+                "28f142b6.c6ef6e"
+            ]
+        ]
+    },
+    {
+        "id": "28f142b6.c6ef6e",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/deviceOn",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1040,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "e2b657f6.0e2ce8",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "schedulesMode",
+        "func": "var payload=msg.payload;\nif (typeof payload.schedulesMode !== 'undefined') {\n    msg.payload = payload.schedulesMode;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 780,
+        "y": 700,
+        "wires": [
+            [
+                "645addb8.3e0b74"
+            ]
+        ]
+    },
+    {
+        "id": "645addb8.3e0b74",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/schedulesMode",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1060,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "f9651062.156258",
+        "type": "function",
+        "z": "74f51eb0.b87828",
+        "name": "state",
+        "func": "var payload=msg.payload;\nif (typeof payload.state !== 'undefined') {\n    msg.payload = payload.state;\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 750,
+        "y": 760,
+        "wires": [
+            [
+                "66f542ff.3e94cc"
+            ]
+        ]
+    },
+    {
+        "id": "66f542ff.3e94cc",
+        "type": "mqtt out",
+        "z": "74f51eb0.b87828",
+        "name": "",
+        "topic": "home/thermostat/state",
+        "qos": "",
+        "retain": "true",
+        "broker": "a25b1722.008ab8",
+        "x": 1020,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "a25b1722.008ab8",
+        "type": "mqtt-broker",
+        "z": "",
+        "name": "MQTT",
+        "broker": "192.168.8.123",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "compatmode": true,
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": ""
+    }
+]
